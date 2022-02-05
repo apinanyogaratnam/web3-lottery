@@ -45,7 +45,8 @@ export default function Home() {
     const covalent = "https://api.covalenthq.com/v1/1/address/" + address + "/transactions_v2/?quote-currency=USD&format=JSON&block-signed-at-asc=false&no-logs=false&key=" + process.env.NEXT_PUBLIC_COVALENT_API_KEY;
     const covalentRes = await axios.get(covalent);
     setCovalentData(covalentRes.data.data);
-    FileSaver.saveAs(covalentRes.data.data, "covalent.json");
+    const blob = new Blob([JSON.stringify(covalentRes.data.data)], {type: "text/plain;charset=utf-8"});
+    FileSaver.saveAs(blob, "covalent.json");
   };
 
   return (
