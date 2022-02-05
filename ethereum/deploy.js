@@ -6,7 +6,7 @@ const { abi, evm } = require('./build/Lottery.json');
 
 const provider = new HDWalletProvider(
   process.env.MNEMONIC,
-  process.env.URL
+  `https://rpc-mumbai.maticvigil.com/v1/${process.env.URL}`
 );
 
 const web3 = new Web3(provider);
