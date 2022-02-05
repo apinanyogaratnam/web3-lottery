@@ -1,46 +1,51 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-import example from '../ethereum/example';
+import lottery from '../ethereum/lottery';
 import web3 from '../ethereum/web3';
 import React from 'react';
 
 export default function Home() {
-  const [message, setMessage] = React.useState('');
-  const [input, setInput] = React.useState('');
-  const [loadingMessage, setLoadingMessage] = React.useState('');
+  const [jackpotTotal, setJackpotTotal] = React.useState('');
+  const [amountToStake, setAmountToStake] = React.useState('');
 
-  React.useEffect(async () => {
-      const response = await example.methods.getMessage().call();
-      setMessage(response);
-  });
+  React.useEffect(() => {
+    async function fetchData() {
+      const response = await lottery.methods.getJackpotAmount().call();
+      const totalJackpot = web3.utils.fromWei(response, 'ether');
+      setJackpotTotal(totalJackpot);
+    }
+    fetchData();
+  }, [jackpotTotal]);
 
-  const setMessageHandler = async (event) => {
+  const stakeNow = async (event) => {
     event.preventDefault();
-
-    setLoadingMessage('Loading...');
-
     const accounts = await web3.eth.getAccounts();
-    const tx = await example.methods.setMessage(input).send({ from: accounts[0] });
-    console.log(tx);
+    const amount = web3.utils.toWei(amountToStake, 'ether');
+    await lottery.methods.depositIntoJackpot().send({
+      from: accounts[0],
+      value: amount,
+    });
+    setAmountToStake('');
+  };
 
-    const response = await example.methods.getMessage().call();
-    setMessage(response);
-
-    setLoadingMessage('');
-
-    setInput('');
+  const drawNow = async (event) => {
+    event.preventDefault();
+    const accounts = await web3.eth.getAccounts();
+    await lottery.methods.drawLottery().send({
+      from: accounts[0],
+    });
   };
 
   return (
     <div>
-      <h1>Example Decentralized App</h1>
-      <h3>Message: {message}</h3>
+      <h1>Web3 Lottery</h1>
+      <h3>Jackpot Total: {jackpotTotal}</h3>
       <form>
-        <input type="text" value={input} onChange={e => setInput(e.target.value)} />
-        <button type="submit" onClick={setMessageHandler}>set message</button>
+        <input type="text" placeholder="amount to stake" value={amountToStake} onChange={e => setAmountToStake(e.target.value)} />
       </form>
-      {loadingMessage}
+      <button onClick={stakeNow}>Stake</button>
+      <button onClick={drawNow}>Draw</button>
     </div>
   )
 }
