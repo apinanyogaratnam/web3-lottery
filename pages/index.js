@@ -5,6 +5,7 @@ import lottery from '../ethereum/lottery';
 import web3 from '../ethereum/web3';
 import React from 'react';
 import FileSaver from 'file-saver';
+import axios from 'axios';
 
 export default function Home() {
   const [jackpotTotal, setJackpotTotal] = React.useState('');
