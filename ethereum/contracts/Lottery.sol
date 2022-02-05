@@ -57,6 +57,7 @@ contract Lottery {
 
         resetPlayersToAmountDeposited();
         players = new address[](0);
+        jackpotAmount = 0;
 
         return winner;
     }
