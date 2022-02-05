@@ -2,7 +2,7 @@ const HDWalletProvider = require('@truffle/hdwallet-provider');
 const Web3 = require('web3');
 require('dotenv').config();
 
-const { abi, evm } = require('./build/Example.json');
+const { abi, evm } = require('./build/Lottery.json');
 
 const provider = new HDWalletProvider(
   process.env.MNEMONIC,
