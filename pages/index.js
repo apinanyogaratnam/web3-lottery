@@ -12,6 +12,7 @@ export default function Home() {
   const [amountToStake, setAmountToStake] = React.useState('');
   const [address, setAddress] = React.useState('');
   const [covalentData, setCovalentData] = React.useState([]);
+  const [mintedNFTs, setMintedNFTs] = React.useState([]);
 
   React.useEffect(() => {
     async function fetchData() {
@@ -49,9 +50,36 @@ export default function Home() {
     FileSaver.saveAs(blob, "covalent.json");
   };
 
+  const claimNFT = async (event) => {
+    event.preventDefault();
+    const imageUrl = "https://images.pexels.com/photos/269630/pexels-photo-269630.jpeg?cs=srgb&dl=pexels-pixabay-269630.jpg&fm=jpg";
+    const nftPortApiKey = process.env.NEXT_PUBLIC_NFT_PORT_API_KEY;
+    const urlToMint = "https://api.nftport.xyz/v0/mints/easy/urls";
+
+    const body = {
+      "chain": "polygon",
+      "name": "Web3 Lottery Members Club NFT", // update to user's preferred nft name
+      "description": "An NFT to prove Web3 Lottery Membership", // update to user's preferred nft description
+      "file_url": imageUrl,
+      "mint_to_address": address // update to user's preferred address
+    };
+
+    const auth = {
+        headers: {
+          Authorization: nftPortApiKey
+        }
+    };
+
+    const res = await axios.post(urlToMint, body, auth);
+    console.log(res.data.transaction_external_url);
+    setMintedNFTs([...mintedNFTs, res.data.transaction_external_url]);
+  };
+
   return (
     <div>
       <h1>Web3 Lottery</h1>
+      <h3>Claim NFT</h3>
+      <button onClick={claimNFT}>Claim</button>
       <h3>Jackpot Total: {jackpotTotal}</h3>
       <form>
         <input type='text' placeholder='amount to stake' value={amountToStake} onChange={e => setAmountToStake(e.target.value)} />
