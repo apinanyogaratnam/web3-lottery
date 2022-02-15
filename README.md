@@ -1,4 +1,5 @@
 # Web3 Lottery
+# Road to web3 Hack 2022
 
 v1.0 contract address (mumbai polygon testnet): 0x07FaD170d196f87524c97Fb64819d0D5c0348D57
 v1.0 contract address (mumbai polygon testnet) url: https://mumbai.polygonscan.com/address/0x07FaD170d196f87524c97Fb64819d0D5c0348D57
